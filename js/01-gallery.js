@@ -18,10 +18,15 @@ function createMarkup(arr) {
     `).join("")
 }
 
+
+let instance;
+
 function handleClick(event) {
+
+
     event.preventDefault();
     if (event.target === event.currentTarget) {
-        return;
+        return; /* перевірка кліку, якщо клік відбувся за межами картинки, по діву, то функція закривається*/
     }
 
     const photo = event.target;
@@ -29,14 +34,24 @@ function handleClick(event) {
         const largeImageURL = photo.dataset.source;
         const description = photo.alt;
 
-        const instance = basicLightbox.create(`
+        instance = basicLightbox.create(`
       <div class="modal">
         <img src="${largeImageURL}" alt="${description}" />
       </div>
-    `);
+    `, {
+            onShow: (instance) => {
+                window.addEventListener('keydown', onEscKeyDown);
+            },
+            onClose: (instance) => {
+                window.removeEventListener('keydown', onEscKeyDown);
+
+            }
+        });
 
         instance.show();
     }
+
+
 
 }
 
@@ -44,3 +59,10 @@ const gallery = document.querySelector(".gallery");
 gallery.insertAdjacentHTML("beforeend", createMarkup(galleryItems))
 
 gallery.addEventListener("click", handleClick);
+
+function onEscKeyDown(e) {
+    console.log(e)
+    if (e.code === 'Escape') {
+        instance.close();
+    }
+}
