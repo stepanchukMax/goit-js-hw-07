@@ -26,7 +26,7 @@ function handleClick(event) {
 
     event.preventDefault();
     if (event.target === event.currentTarget) {
-        return; /* перевірка кліку, якщо клік відбувся за межами картинки, по діву, то функція закривається*/
+        return;
     }
 
     const photo = event.target;
